@@ -40,4 +40,9 @@
      
      <changefreq>daily</changefreq>
     </url>
+    <url>
+     <loc>https://luncliff.github.io/modern-cpp-next/kor/appendix_install/</loc>
+     <lastmod>2020-01-08</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
 </urlset>

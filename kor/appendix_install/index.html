@@ -8,7 +8,7 @@
   
   <meta name="author" content="Park DongHa <luncliff@gmail.com>">
   <link rel="shortcut icon" href="../../img/favicon.ico">
-  <title>Part 3 - Modern C++ Next</title>
+  <title>Install - Modern C++ Next</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
@@ -17,9 +17,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Part 3";
-    var mkdocs_page_input_path = "kor/modules_p3.md";
-    var mkdocs_page_url = "/modern-cpp-next/kor/modules_p3/";
+    var mkdocs_page_name = "Install";
+    var mkdocs_page_input_path = "kor/appendix_install.md";
+    var mkdocs_page_url = "/modern-cpp-next/kor/appendix_install/";
   </script>
   
   <script src="../../js/jquery-2.1.1.min.js" defer></script>
@@ -76,15 +76,9 @@
                     
     <a class="" href="../modules_p2/">Part 2</a>
                 </li>
-                <li class=" current">
+                <li class="">
                     
-    <a class="current" href="./">Part 3</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l3"><a href="#module-export-and-import">Module Export and Import</a></li>
-    
-
-    </ul>
+    <a class="" href="../modules_p3/">Part 3</a>
                 </li>
                 <li class="">
                     
@@ -108,9 +102,24 @@
 		
     <span class="caption-text">Appendix</span>
     <ul class="subnav">
-                <li class="">
+                <li class=" current">
                     
-    <a class="" href="../appendix_install/">Install</a>
+    <a class="current" href="./">Install</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#llvm-libc-clang">LLVM 프로젝트(libc++, Clang ...)</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#_1">설치방법</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#ubuntu">Ubuntu 환경에서의 컴파일러 설치</a></li>
+    
+
+    </ul>
                 </li>
     </ul>
 	    </li>
@@ -137,14 +146,14 @@
     
       
         
-          <li>Modules &raquo;</li>
+          <li>Appendix &raquo;</li>
         
       
     
-    <li>Part 3</li>
+    <li>Install</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="http://github.com/luncliff/modern-cpp-next/edit/master/docs/kor/modules_p3.md"> Edit on luncliff/modern-cpp-next</a>
+        <a href="http://github.com/luncliff/modern-cpp-next/edit/master/docs/kor/appendix_install.md"> Edit on luncliff/modern-cpp-next</a>
       
     </li>
   </ul>
@@ -153,8 +162,43 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="module-export-and-import">Module Export and Import</h1>
-<p>(WIP)</p>
+                <h2 id="llvm-libc-clang">LLVM 프로젝트(libc++, Clang ...)</h2>
+<h3 id="_1">설치방법</h3>
+<p>You can remove the <code>clang</code> if you don't want to install it.
+Normally just <code>libcxx</code> and <code>libcxxabi</code> will be fine.</p>
+<pre class="codehilite"><code class="language-bash linenums">#!/bin/bash
+branch=${1:-&quot;master&quot;}
+install_prefix=$(realpath ${2:-&quot;/usr&quot;})
+provider=&quot;https://github.com/llvm-mirror&quot;
+
+pushd /tmp
+    # get the packages with specified version
+    for repo in &quot;llvm&quot; &quot;libcxx&quot; &quot;libcxxabi&quot; &quot;clang&quot;
+    do
+        # download + unzip one by one
+        uri=&quot;${provider}/${repo}/archive/${branch}.zip&quot;
+        wget -q -O &quot;${repo}.zip&quot; ${uri}
+        unzip -u -q &quot;${repo}.zip&quot;
+        mv &quot;${repo}-${branch}&quot; &quot;${repo}&quot;
+    done
+
+    mkdir -p llvm-build &amp;&amp; pushd llvm-build
+        cmake ../llvm \
+            -DLLVM_ENABLE_PROJECTS=&quot;libcxx;libcxxabi;clang&quot; \
+            -DCMAKE_INSTALL_PREFIX=&quot;${install_prefix}&quot;
+
+        # too many logs. make silent ...
+        make -j4 install-clang  2&gt;err-clang.txt
+        make -j4 install-cxx    2&gt;err-libcxx.txt
+        make -j4 install-cxxabi 2&gt;err-libcxxabi.txt
+    popd # leave /tmp/llvm-build
+popd # leave /tmp</code></pre>
+
+
+<h2 id="ubuntu">Ubuntu 환경에서의 컴파일러 설치</h2>
+<blockquote>
+<p>TBA</p>
+</blockquote>
               
             </div>
           </div>
@@ -162,10 +206,8 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../modules_p4/" class="btn btn-neutral float-right" title="Part 4">Next <span class="icon icon-circle-arrow-right"></span></a>
       
-      
-        <a href="../modules_p2/" class="btn btn-neutral" title="Part 2"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../modules_p4/" class="btn btn-neutral" title="Part 4"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -193,10 +235,8 @@
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../modules_p2/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../modules_p4/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
-      
-        <span style="margin-left: 15px"><a href="../modules_p4/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
