@@ -7,16 +7,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta name="author" content="Park DongHa <luncliff@gmail.com>">
-  <link rel="shortcut icon" href="/modern-cpp-next/img/favicon.ico">
-  <title>Modern C++ Next</title>
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>Part 2 - Modern C++ Next</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
-  <link rel="stylesheet" href="/modern-cpp-next/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="/modern-cpp-next/css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   
-  <script src="/modern-cpp-next/js/jquery-2.1.1.min.js" defer></script>
-  <script src="/modern-cpp-next/js/modernizr-2.8.3.min.js" defer></script>
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Part 2";
+    var mkdocs_page_input_path = "kor/modules_p2.md";
+    var mkdocs_page_url = "/modern-cpp-next/kor/modules_p2/";
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/c++.min.js"></script>
@@ -31,9 +38,9 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href="/modern-cpp-next/." class="icon icon-home"> Modern C++ Next</a>
+        <a href="../.." class="icon icon-home"> Modern C++ Next</a>
         <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="/modern-cpp-next/search.html" method="get">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
@@ -45,12 +52,12 @@
           
             <li class="toctree-l1">
 		
-    <a class="" href="/modern-cpp-next/.">Home</a>
+    <a class="" href="../..">Home</a>
 	    </li>
           
             <li class="toctree-l1">
 		
-    <a class="" href="/modern-cpp-next/kor/getting_started/">Getting Started</a>
+    <a class="" href="../getting_started/">Getting Started</a>
 	    </li>
           
             <li class="toctree-l1">
@@ -59,23 +66,29 @@
     <ul class="subnav">
                 <li class="">
                     
-    <a class="" href="/modern-cpp-next/kor/modules_p0/">Overview</a>
+    <a class="" href="../modules_p0/">Overview</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="/modern-cpp-next/kor/modules_p1/">Part 1</a>
+    <a class="" href="../modules_p1/">Part 1</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">Part 2</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#global-module-fragment">Global Module Fragment</a></li>
+    
+
+    </ul>
                 </li>
                 <li class="">
                     
-    <a class="" href="/modern-cpp-next/kor/modules_p2/">Part 2</a>
+    <a class="" href="../modules_p3/">Part 3</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="/modern-cpp-next/kor/modules_p3/">Part 3</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="/modern-cpp-next/kor/modules_p4/">Part 4</a>
+    <a class="" href="../modules_p4/">Part 4</a>
                 </li>
     </ul>
 	    </li>
@@ -86,7 +99,7 @@
     <ul class="subnav">
                 <li class="">
                     
-    <a class="" href="/modern-cpp-next/kor/concepts_p0.md">Overview</a>
+    <a class="" href="../concepts_p0.md">Overview</a>
                 </li>
     </ul>
 	    </li>
@@ -101,7 +114,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="/modern-cpp-next/.">Modern C++ Next</a>
+        <a href="../..">Modern C++ Next</a>
       </nav>
 
       
@@ -109,10 +122,18 @@
         <div class="rst-content">
           <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="/modern-cpp-next/.">Docs</a> &raquo;</li>
+    <li><a href="../..">Docs</a> &raquo;</li>
     
+      
+        
+          <li>Modules &raquo;</li>
+        
+      
     
+    <li>Part 2</li>
     <li class="wy-breadcrumbs-aside">
+      
+        <a href="http://github.com/luncliff/modern-cpp-next/edit/master/docs/kor/modules_p2.md"> Edit on luncliff/modern-cpp-next</a>
       
     </li>
   </ul>
@@ -121,15 +142,21 @@
           <div role="main">
             <div class="section">
               
-
-  <h1 id="404-page-not-found">404</h1>
-
-  <p><strong>Page not found</strong></p>
-
-
+                <h1 id="global-module-fragment">Global Module Fragment</h1>
+<p>(WIP)</p>
+              
             </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../modules_p3/" class="btn btn-neutral float-right" title="Part 3">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../modules_p1/" class="btn btn-neutral" title="Part 1"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
@@ -155,12 +182,16 @@
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
+        <span><a href="../modules_p1/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../modules_p3/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
-    <script>var base_url = '/modern-cpp-next';</script>
-    <script src="/modern-cpp-next/js/theme.js" defer></script>
-      <script src="/modern-cpp-next/search/main.js" defer></script>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
 
 </body>
 </html>
