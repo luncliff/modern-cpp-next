@@ -7,7 +7,7 @@
 
 ### Core Features
 
-* Modules: [한국어](./kor/modules_p1.md) / English
+* Modules: [한국어](./kor/modules_p0.md) / English
 * Coroutines
 * Concepts
 

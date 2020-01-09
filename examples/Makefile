@@ -1,5 +1,10 @@
 CFLAGS	= -std=c++2a -fmodules-ts
-LDFLAGS	= -lstdc++
+# LDFLAGS	= -lstdc++
+
+module_empty: module_empty.cpp
+	clang-9 $(CFLAGS) $(LDFLAGS) \
+		-o module_empty.o -c $?
+
 
 next_part_1: module_part_1.cpp
 	clang-9 $(CFLAGS) $(LDFLAGS) \

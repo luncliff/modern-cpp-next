@@ -4,9 +4,9 @@
 #warning "'__cpp_modules' not defined"
 #endif
 
-export module next;
-
 #include <cstdint>
+
+export module next;
 
 /**
  * @brief IP v6 address. 128 bit
