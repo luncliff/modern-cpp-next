@@ -83,9 +83,15 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#modules">Modules의 접근법</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#immutable">변경할 수 없는(Immutable) 선언 파일</a>
+    <li class="toctree-l3"><a class="reference internal" href="#module-interface-unit">Module Interface Unit</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#module">Module 구현</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#module_1">Module 사용</a>
     </li>
         </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_6">정리</a>
     </li>
     </ul>
                     </li>
@@ -140,7 +146,8 @@
 <h3 id="warming-up">워밍업 (Warming up)</h3>
 <p>지금 설명하는 주제에 관심이 있는 분이라면 이미 알고 계시겠지만, 컴파일 언어인 C++에서 프로그램은 1개 이상의 소스코드 파일로 구성됩니다.
 소스 코드란, 아래와 같이 C++ 문법에 맞춰 작성한 텍스트를 가리키는 것이구요.</p>
-<pre><code class="c++">#include &lt;cstdio&gt;
+<pre><code class="c++">/// @file examples/modules_p1_1.cpp
+#include &lt;cstdio&gt;
 
 int main(int argc, char* argv[]){
     for(auto i = 0; i &lt; argc; ++i)
@@ -149,7 +156,7 @@ int main(int argc, char* argv[]){
 }
 </code></pre>
 
-<pre><code>clang -std=c++2a ./modules_p0_1.cpp
+<pre><code class="bash">clang -std=c++2a ./modules_p0_1.cpp
 </code></pre>
 
 <p>위와 같이 컴파일러를 호출해서 프로그램을 만들 수 있습니다.
@@ -182,55 +189,18 @@ C++ 코드를 구성하는 것 중 가장 많은 부분을 차지하는 부분�
 <p>제 기억에 libc++에서 가장 간단한 헤더는 <code>&lt;__nullptr&gt;</code>였던 것 같습니다.</p>
 <pre><code>user@host:~/examples $ echo &quot;#include &lt;__nullptr&gt;&quot; | clang -x c++ -E -
 # 1 &quot;&lt;stdin&gt;&quot;
-# 1 &quot;&lt;built-in&gt;&quot; 1
-# 1 &quot;&lt;built-in&gt;&quot; 3
-# 374 &quot;&lt;built-in&gt;&quot; 3
-# 1 &quot;&lt;command line&gt;&quot; 1
-# 1 &quot;&lt;built-in&gt;&quot; 2
-# 1 &quot;&lt;stdin&gt;&quot; 2
-# 1 &quot;/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__nullptr&quot; 1 3
-# 14 &quot;/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__nullptr&quot; 3
-# 1 &quot;/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__config&quot; 1 3
-# 57 &quot;/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__config&quot; 3
-# 444 &quot;/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__config&quot; 3
-typedef __char16_t char16_t;
-typedef __char32_t char32_t;
-# 874 &quot;/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__config&quot; 3
-namespace std { inline namespace __1 { } }
-# 15 &quot;/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__nullptr&quot; 2 3
+...
 # 18 &quot;/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__nullptr&quot; 3
-
-
-
 
 namespace std { inline namespace __1 {
 
 struct __attribute__ ((__type_visibility__(&quot;default&quot;))) nullptr_t
 {
     void* __lx;
-
-    struct __nat {int __for_bool_;};
-
-    __attribute__ ((__visibility__(&quot;hidden&quot;))) __attribute__ ((internal_linkage)) nullptr_t() : __lx(0) {}
-    __attribute__ ((__visibility__(&quot;hidden&quot;))) __attribute__ ((internal_linkage)) nullptr_t(int __nat::*) : __lx(0) {}
-
-    __attribute__ ((__visibility__(&quot;hidden&quot;))) __attribute__ ((internal_linkage)) operator int __nat::*() const {return 0;}
-
-    template &lt;class _Tp&gt;
-        __attribute__ ((__visibility__(&quot;hidden&quot;))) __attribute__ ((internal_linkage))
-        operator _Tp* () const {return 0;}
-
-    template &lt;class _Tp, class _Up&gt;
-        __attribute__ ((__visibility__(&quot;hidden&quot;))) __attribute__ ((internal_linkage))
-        operator _Tp _Up::* () const {return 0;}
-
-    friend __attribute__ ((__visibility__(&quot;hidden&quot;))) __attribute__ ((internal_linkage)) bool operator==(nullptr_t, nullptr_t) {return true;}
-    friend __attribute__ ((__visibility__(&quot;hidden&quot;))) __attribute__ ((internal_linkage)) bool operator!=(nullptr_t, nullptr_t) {return false;}
+    // ...
 };
 
 inline __attribute__ ((__visibility__(&quot;hidden&quot;))) __attribute__ ((internal_linkage)) nullptr_t __get_nullptr_t() {return nullptr_t(0);}
-
-
 
 } }
 # 2 &quot;&lt;stdin&gt;&quot; 2
@@ -250,12 +220,13 @@ C++ 에서는 위처럼 <strong>전처리를 거친 소스파일을 Translation 
 <li>일률적임: header 파일은 일반적인 소스파일처럼 관리가 가능</li>
 <li>제어가 가능함: 소스파일을 변경하지 않으면서 TU를 변경할 수 있음(부분적인 활성화/비활성화 등)</li>
 </ul>
-<p>헤더 파일을 사용하기 위해선 해당 파일을 찾기 위한 경로를 제공해야 하지만, <code>/usr/include</code>와 같이 묵시적으로 사용되는 경로라면 생략이 가능합니다. 컴파일러를 위한 복잡한 옵션이 필요하진 않은 것이죠.</p>
-<p>무엇보다 소스파일 내에서서 읽을 수 있는 형태로 드러나기 때문에 프로그래머에게 주는 전달력 또한 상당하다는 점을 들 수 있습니다.
-예컨대, 아래의 코드는 별다른 설명 없이도 그 내용을 짐작할 수 있습니다.
-그 내용이란, 이 소스파일이 <code>openssl</code>이라는 라이브러리의 선언을 사용하며, 선언 중에 <code>SHA_CTX</code>, <code>SHA1_Init</code>등이 있다는 것이죠.</p>
+<p>헤더 파일을 사용하기 위해선 해당 파일을 찾기 위한 경로를 제공해야 하지만, <code>/usr/include</code>와 같이 묵시적으로 사용되는 경로라면 생략이 가능합니다. 컴파일러를 위한 복잡한 옵션이 필요하진 않은 것이죠.
+무엇보다 소스파일 내에서서 읽을 수 있는 형태로 드러나기 때문에 프로그래머에게 주는 전달력 또한 상당하다는 점을 들 수 있습니다.</p>
+<p>예컨대, 아래의 코드는 별다른 설명 없이도 그 내용을 짐작할 수 있습니다.
+그 내용이란, 이 소스파일이 <code>openssl</code>이라는 라이브러리의 선언을 사용하며, 선언 중에 <code>SHA_CTX</code>, <code>SHA1_Init</code>등의 존재를 확인할 수 있다는 의미입니다.</p>
 <pre><code class="c++">#include &lt;cstddef&gt;  // C++17 byte
 #include &lt;array&gt;    // C++11 array
+
 #include &lt;openssl/sha.h&gt;
 
 using namespace std;
@@ -265,7 +236,7 @@ int digest_sha1(FILE* fin,
     SHA_CTX ctx{};
     SHA1_Init(&amp;ctx);
 
-    auto&amp; buffer = digest; // simple alias
+    auto&amp; buffer = digest; // alias for readability
     while(auto count = fread(buffer.data(), buffer.size(), fin))
         SHA1_Update(&amp;ctx, buffer.data(), count);
 
@@ -286,16 +257,14 @@ int digest_sha1(FILE* fin,
 <li>A 헤더에서 <code>#ifdef</code> 조건을 사용하고 있었는데,<br />
   새로 B 헤더가 그 앞에 include 되면서 조건이 반전되었다 (false 였다면 true로 변함. 혹은 그 반대)</li>
 </ol>
-<p>위 두 상황이 시사하는 점은, 선언을 모아놓은 헤더 파일은 <strong>변경(modification)</strong>될 수 있으며, 이 변경은 전처리기와 같이 <strong>헤더파일에서 제어할 수 없는 요인에 의해 발생할 수 있다</strong>는 것입니다.</p>
+<p>위 두 상황이 시사하는 점은, 선언을 모아놓은 헤더 파일은 <strong>변경될 수 있으며(mutable)</strong>, 이것이 전처리기와 같이 <strong>헤더파일에서 제어할 수 없는 요인에 의해 발생할 수 있다</strong>는 것입니다.</p>
 <p>전처리기의 장점을 되짚어보면 C++ 프로젝트의 규모가 커지고 의존성이 복잡해질 수록 이같은 문제로 인한 위험이 더 커진다는 것을 예상할 수 있습니다.
 물론 오늘날 많은 C++ 라이브러리들은 이 문제를 위한 최소한의 방어법을 적용하고 있습니다.</p>
-<p>좀 더 보수적으로 전처리기에 의존하고, 매크로 조건이 충돌하거나 의도한 범위를 넘어서 영향을 주지않도록(<code>#undef</code>) 설계하며, 미리 정해진 순서로 부분 헤더파일을 include하는 헤더파일을 제공하기도 합니다. 
-하지만 전처리기에 의존하는 이상 이런 문제들은 계속 발생할 수 밖에 없기 때문에 한정적입니다.</p>
+<p>매크로를 <code>constexpr</code> 혹은 <code>if constexpr</code>로 대체하면서 전처리기 의존을 낮추고, 사용하게 되더라도 매크로 조건이 충돌하거나 의도한 범위를 넘어서 영향을 주지않도록(<code>#undef</code>) 설계하며, 미리 정해진 순서로 부분 헤더파일을 include하는 헤더파일을 제공하기도 합니다. 
+하지만 전처리기에 의존하는 이상 이런 문제들은 계속 발생할 수 밖에 없기 때문에 복잡성은 계속 증가하게 됩니다.</p>
 <h2 id="modules">Modules의 접근법</h2>
-<h3 id="immutable">변경할 수 없는(Immutable) 선언 파일</h3>
-<p>Modules의 접근법은 이렇습니다.<br />
-<strong>하나의 TU를 미리 컴파일하여, 이로부터 symbol을 얻는다</strong>.</p>
-<p>이 방법이 가져오는 효과는 2가지 입니다.</p>
+<p>Modules의 접근법은 이렇습니다. <strong>하나의 TU를 미리 컴파일하여, 이로부터 symbol을 얻는다</strong>.<br />
+이 방법이 가져오는 효과는 2가지 입니다.</p>
 <ol>
 <li>소스 파일을 노출하지 않기 때문에 변경이 불가능하다</li>
 <li>컴파일을 거치기 때문에 <strong>컴파일 시점의 전처리 결과를 반영한다</strong></li>
@@ -304,10 +273,165 @@ int digest_sha1(FILE* fin,
 결국 전처리 과정에서 (주요 선언을 포함한) 소스코드가 변경될 수 있다는 것.
 변경이 발생하는 것은 미래 시점이기에 제어할 수 없다는 것이
 현재까지의 컴파일 과정에서 문제가 끊이지 않는 원인이라는 것이죠.</p>
-<p>선언을 '박제'한다는 점에서 .exp 파일을 떠올리는 분들도 계실 것 같습니다.</p>
+<p>선언을 '박제'한다는 점에서 .exp 파일을 떠올리는 분들도 계실 것 같습니다. 구체적인 사용법을 살펴보도록 하죠.</p>
+<h3 id="module-interface-unit">Module Interface Unit</h3>
+<p>모듈을 만들고 사용하는 것은 먼저 모듈이 노출하는(export) 선언들이 모여있는 하나의 TU를 컴파일하는 것으로 시작합니다.
+이를 Module Interface Unit이라고 합니다. </p>
+<p>모든 모듈은 오직 하나의 MIU만을 가질 수 있습니다. 
+MIU의 작성방법은 굉장히 간단한데, 그저 <code>export module m1;</code>를 선언하면, 그 이후의 내용은 전부 <code>m1</code>에 귀속됩니다. 이를 모듈의 범위(Purview)라고 합니다.</p>
+<pre><code class="c++">/// @file examples/modules_p1_2.cpp
+/// @see https://en.cppreference.com/w/cpp/preprocessor/replace
+#if not defined(__cpp_modules)
+#warning &quot;'__cpp_modules' not defined&quot;
+#endif
+#include &lt;cstdint&gt;
+export module m1; // all following declarations will be in `m1`
+
+export struct endpoint_t {
+    uint32_t _u32[4];
+};
+
+export uint16_t lookup(endpoint_t* base, uint16_t capacity, //
+                       const char* hostname,                //
+                       const char* servname) noexcept;
+</code></pre>
+
+<p>모듈의 다른 소스코드를 컴파일하고, 최종적으로 라이브러리 혹은 실행파일을 만들기 위해선 위와 같은 MIU를 먼저 컴파일(precompile) 해야 합니다.</p>
+<p>Clang의 경우, 아래와 같이 수행할 수 있습니다.</p>
+<pre><code class="console">user@host:~/examples $ clang -x c++-module -std=c
+++2a -fmodules-ts --precompile -o m1.ifc ./modules_p1_2.c
+pp 
+./modules_p1_2.cpp:4:2: warning: &quot;'__cpp_modules' not
+      defined&quot; [-W#warnings]
+#warning &quot;'__cpp_modules' not defined&quot;
+ ^
+1 warning generated.
+</code></pre>
+
+<p>Makefile로 작성한다면 이런 형태가 되겠지요.</p>
+<pre><code class="makefile">CXXFLAGS    = -std=c++2a -fmodules-ts
+
+m1.ifc: modules_p1_2.cpp
+    clang $(CXXFLAGS) -x c++-module \
+         --precompile -o m1.ifc $?
+</code></pre>
+
+<p><code>.ifc</code> 이라는 확장자는 예약된 것은 아닙니다. 당장은 Precompiled Module을 위한 임의의 확장자가 있다고 생각하시면 되겠습니다.
+아마 이 파일의 규격화(즉, 컴파일러 종속적이지 않은 ifc 파일)는 C++ 20 이후 다소 시간이 지난 후에야 이루어질 수 있을 것입니다.</p>
 <blockquote>
-<p>TBA</p>
+<p>실제로는 Clang에서는 <code>.cppm</code>이라는 확장자가 사용되고 있습니다.</p>
 </blockquote>
+<p>현재로써는 이 파일 안에 어떤 symbol이 들어있는지 확인하는 방법이 없습니다. 하지만 실제로 사용해보면 적법한(valid) 내용이 있는지 확인하는 것은 가능합니다.</p>
+<ol>
+<li>구현 코드(module)를 작성해본다</li>
+<li>사용 코드(import)를 작성해본다</li>
+</ol>
+<h3 id="module">Module 구현</h3>
+<p>export의 선언은 MIU에서만 가능하기 때문에, <code>module m1</code>의 구현파일들에서는 따로 export 키워드를 사용할 일은 없습니다. 다만 m1의 범위(Purview)
+안에서 구현을 제공하기만 하면 됩니다.</p>
+<p>범위를 바꾸는 것은 아래 코드처럼 <code>module m1;</code>를 선언하는 것으로 충분합니다.</p>
+<pre><code class="c++">/// @file examples/module_p1_3.cpp
+#include &lt;cstdint&gt;
+module m1; // `endpoint_t` becomes visible
+           // since it's purview of `m1`
+
+uint16_t lookup(endpoint_t* base, uint16_t capacity, //
+                const char* hostname,                //
+                const char* servname) noexcept {
+    return 0;
+}
+</code></pre>
+
+<p>이 TU에는 <code>endpoint_t</code>에 대한 선언이 없지만, <code>m1</code>의 범위에서는 문제가 되지 않습니다. 이를 Visible 하다고 표현합니다.<br />
+특히, 이는 선언(Declaration)에 대한 것이므로, Linking 과정에서 Symbol에 대한 접근을 제어하는 <code>-fvisibility</code>옵션과는 다르다는 점을 숙지할 필요가 있습니다.</p>
+<p>컴파일 명령은 일반적인 C++ 소스코드와 유사합니다. 다만, 새로 2개의 옵션을 지정해줄 필요가 있습니다.</p>
+<ul>
+<li><code>-fprebuilt-module-path</code>: .ifc 파일을 찾기 위한 폴더 지정</li>
+<li><code>-fmodule-file</code>: 현재 구현중인 모듈의 .ifc 파일 이름</li>
+</ul>
+<pre><code class="makefile">CXXFLAGS    = -std=c++2a -fmodules-ts
+# ...
+m1_impl_1.o: modules_p1_3.cpp
+    clang $(CXXFLAGS) \
+        -fprebuilt-module-path=/usr/local/include \
+        -fprebuilt-module-path=. \
+        -fmodule-file=m1.ifc -o m1_impl_1.o -c $?
+</code></pre>
+
+<p>명령을 보면 <code>-fprebuilt-module-path</code>는 헤더를 찾을 수 있도록 <code>-I</code>옵션을 제공했던 것과 유사합니다.
+컴파일 방법을 알았으니, <code>mi_impl_1.o</code>파일에서 symbol을 확인해볼 수 있겠군요.</p>
+<pre><code class="console">~/examples $ make m1_impl_1.o
+clang -std=c++2a -fmodules-ts \
+        -fprebuilt-module-path=/usr/local/include \
+        -fprebuilt-module-path=. \
+        -fmodule-file=m1.ifc -o m1_impl_1.o -c modules_p1
+_3.cpp
+~/examples $ luncliff$ nm --demangle ./m1_impl_1.
+o 
+0000000000000000 T lookup(endpoint_t*, unsigned short, ch
+ar const*, char const*)
+</code></pre>
+
+<ul>
+<li>Q. <code>-fmodule-file</code>을 생략하고 컴파일 해보세요! (컴파일 옵션)</li>
+<li>Q. 소스 코드에서 <code>module m1;</code>을 생략한 뒤에 컴파일 오류를 확인하세요! (purview 이해하기)</li>
+<li>Q. 소스 코드에서 <code>module m1;</code>의 위치를 <code>lookup</code>함수의 정의보다 아래쪽에 배치하고 컴파일 오류를 확인하세요! (purview 이해하기)</li>
+</ul>
+<h3 id="module_1">Module 사용</h3>
+<p>앞선 예제로 확인하셨겠지만, 모듈을 사용하기 시작한다고 해서 헤더파일(즉, 전처리기에 의한 <code>#include</code>)를 사용할 수 없게 되는 것은 아닙니다.</p>
+<p>다만 컴파일된 모듈 인터페이스가 있다면, import 하는 것이 가능하다는 것이죠.</p>
+<pre><code class="c++">/// @file examples/modules_p1_5.cpp
+#include &lt;array&gt;
+#include &lt;iostream&gt;
+import m1;
+
+std::array&lt;endpoint_t, 10&gt; endpoints{};
+
+int main(int, char*[]) {
+    auto count = lookup(endpoints.data(), endpoints.size(), //
+                        &quot;releases.llvm.org&quot;, &quot;https&quot;);
+
+    std::cout &lt;&lt; count &lt;&lt; std::endl;
+    for (auto i = 0u; i &lt; count; ++i) {
+        endpoints[i];
+    }
+    return count &gt; 0 ? EXIT_SUCCESS : EXIT_FAILURE;
+}
+</code></pre>
+
+<p><a href="https://youtu.be/tjSuKOz5HK4?t=2286">헤더파일들이 지원하기만 한다면, 헤더파일들에도 <code>import</code>가 가능합니다</a>.
+<code>#include</code>가 코드의 복제인데 반해, <code>import</code>는 헤더파일 안에 있는 코드를 한번 처리하여, 그 중간결과물을 다른 TU의 import에서 재사용합니다. 결과적으로 처리 시간이 좀 더 줄어들게 되겠죠. (안타깝게도 아직은 지원되지 않습니다.)</p>
+<pre><code class="c++">import &lt;array&gt;;
+import &lt;iostream&gt;;
+import m1;
+// ...
+</code></pre>
+
+<p>앞서 만들어놓은 <code>m1</code>의 구현 object와 함께 빌드하는 것은 아래처럼 할 수 있습니다. (편의상 <code>-fprebuilt-module-path</code>를 생략하였습니다.)</p>
+<pre><code class="makefile">LDFLAGS     = -lc++
+CXXFLAGS    = -std=c++2a -fmodules-ts
+# ...
+m1_usage: m1_impl_1.o modules_p1_5.cpp
+    clang $(CXXFLAGS) $(LDFLAGS) \
+        -fmodule-file=m1.ifc $?
+</code></pre>
+
+<pre><code class="console">user@host:~/examples $ make m1_usage
+clang -std=c++2a -fmodules-ts -lc++ \
+        -fmodule-file=m1.ifc m1_impl_1.o modules_p1_5.cpp
+user@host:~/examples $ nm --demangle ./a.out 
+0000000100000f6c s GCC_except_table6
+                 U __Unwind_Resume
+0000000100000bf0 T lookup(endpoint_t*, unsigned short, char const*, 
+char const*)
+...
+0000000100000c20 T _main
+...
+</code></pre>
+
+<h2 id="_6">정리</h2>
+<p>소스 코드 수준의 차이점은 Modules를 적용했다는 것이고, 
+빌드 과정에서 달라진 것은 <code>-fmodule-file=m1.ifc</code>와 같이 미리 컴파일된 모듈 인터페이스 파일들을 제공하게 되었다는 것입니다.</p>
               
             </div>
           </div>
