@@ -7,9 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta name="author" content="Park DongHa <luncliff@gmail.com>">
-  <link rel="canonical" href="https://luncliff.github.io/modern-cpp-next/kor/getting_started/">
+  <link rel="canonical" href="https://luncliff.github.io/modern-cpp-next/kor/modules_p4/">
   <link rel="shortcut icon" href="../../img/favicon.ico">
-  <title>Getting Started - Modern C++ Next</title>
+  <title>Part 4 - Modern C++ Next</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
 
   <link rel="stylesheet" href="../../css/theme.css" />
@@ -18,9 +18,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Getting Started";
-    var mkdocs_page_input_path = "kor/getting_started.md";
-    var mkdocs_page_url = "/modern-cpp-next/kor/getting_started/";
+    var mkdocs_page_name = "Part 4";
+    var mkdocs_page_input_path = "kor/modules_p4.md";
+    var mkdocs_page_url = "/modern-cpp-next/kor/modules_p4/";
   </script>
   
   <script src="../../js/jquery-2.1.1.min.js" defer></script>
@@ -53,26 +53,12 @@
                     <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
                     </li>
                 </ul>
-                <ul class="current">
-                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Getting Started</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#minimal-executable-example">Minimal Executable Example</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#platform">Platform</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#compiler">Compiler</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#standard-library">Standard Library</a>
-    </li>
-        </ul>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#build-system">Build System</a>
-    </li>
-    </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting_started/">Getting Started</a>
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">Modules</span></p>
-                <ul>
+                <ul class="current">
                     <li class="toctree-l1"><a class="reference internal" href="../modules_p0/">Overview</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../modules_p1/">Part 1</a>
@@ -81,7 +67,31 @@
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../modules_p3/">Part 3</a>
                     </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../modules_p4/">Part 4</a>
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Part 4</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#global-module">Global Module</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#global-module-fragment">Global Module Fragment</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#examples-bad">Examples, Bad</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#linkage-of-module">Linkage of Module</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#examples-bad_1">Examples, Bad</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#module-unit">Module Unit</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#module-partition">Module Partition</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
                     </li>
                 </ul>
       </div>
@@ -104,11 +114,15 @@
     <li><a href="../..">Docs</a> &raquo;</li>
     
       
+        
+          <li>Modules &raquo;</li>
+        
+      
     
-    <li>Getting Started</li>
+    <li>Part 4</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="http://github.com/luncliff/modern-cpp-next/edit/master/docs/kor/getting_started.md"> Edit on luncliff/modern-cpp-next</a>
+        <a href="http://github.com/luncliff/modern-cpp-next/edit/master/docs/kor/modules_p4.md"> Edit on luncliff/modern-cpp-next</a>
       
     </li>
   </ul>
@@ -118,46 +132,29 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="c-20">C++ 20 시작하기</h1>
-<p>이 페이지에서는 C++ 20을 사용하기 위해 필요한 것들에 대해 다룹니다.</p>
-<h3 id="minimal-executable-example">Minimal Executable Example</h3>
-<p>이 저장소의 <strong>실행가능한 코드들은</strong> 다음의 서비스들을 사용해서 용례를 보입니다.</p>
-<ul>
-<li>https://wandbox.org/</li>
-<li>https://godbolt.org/</li>
-</ul>
-<h3 id="platform">Platform</h3>
-<p>알려진 CI 서비스들에서 제공하는 환경들과 복잡한 절차 없이 설치 가능한 환경을 상정하였습니다.</p>
-<ul>
-<li>Ubuntu Linux 18.04 x86_64 (4.4, 4.15)</li>
-<li>Windows 10 x64 (10.0.18362)</li>
-<li>...</li>
-</ul>
+                <h1 id="c-modules-2">C++ Modules의 사용법 - 2</h1>
 <blockquote>
-<p>TODO: CI 서비스들의 MacOS 버전정보 확인 필요함</p>
+<p>TBA</p>
 </blockquote>
-<h3 id="compiler">Compiler</h3>
-<p>특별히 명시되지 않는한, 예제 코드들은 아래의 컴파일러들을 사용합니다. (2020년 1월 기준)</p>
+<h2 id="global-module">Global Module</h2>
+<p>기존 코드와의 호환성</p>
+<h3 id="global-module-fragment">Global Module Fragment</h3>
+<p>Purview 개념을 더 이해할 수 있기 위한 내용</p>
+<h4 id="examples-bad">Examples, Bad</h4>
 <ul>
-<li>GCC 9.2.1 (20191102)</li>
-<li>Clang 9.0.0 (20191211)</li>
-<li>MSVC 19.24 x64 (v142, <a href="https://docs.microsoft.com/en-us/visualstudio/releases/2019/release-notes-history">Visual Studio 2019 16.4</a>)</li>
-<li>AppleClang 11 (<a href="https://developer.apple.com/documentation/xcode_release_notes/xcode_11_release_notes">XCode 11</a>)</li>
-</ul>
-<h4 id="standard-library">Standard Library</h4>
-<ul>
-<li><code>libc++</code>/<code>libc++abi</code>의 버전은 컴파일러와 마찬가지로 <a href="http://releases.llvm.org/download.html">LLVM 의 배포 버전</a>을 따릅니다.</li>
-</ul>
-<h3 id="build-system">Build System</h3>
-<p>저자들이 사용한 빌드 관련 도구들의 버전은 다음과 같습니다.</p>
-<ul>
-<li>GNU Make 4.1</li>
-<li>CMake 3.12+ <ul>
-<li><code>CXX_STANDARD</code>에 20을 설정 가능한 최소 버전</li>
-</ul>
-</li>
+<li>실패 Case</li>
 <li>...</li>
 </ul>
+<h2 id="linkage-of-module">Linkage of Module</h2>
+<p>모듈내 선언들의 링킹 제약조건</p>
+<h4 id="examples-bad_1">Examples, Bad</h4>
+<ul>
+<li>실패 Case</li>
+<li>...</li>
+</ul>
+<h2 id="module-unit">Module Unit</h2>
+<p>아직 실험할 수 없지만 Standard 에는 존재하는 부분</p>
+<h3 id="module-partition">Module Partition</h3>
               
             </div>
           </div>
@@ -165,10 +162,8 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../modules_p0/" class="btn btn-neutral float-right" title="Overview">Next <span class="icon icon-circle-arrow-right"></span></a>
       
-      
-        <a href="../.." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../modules_p3/" class="btn btn-neutral" title="Part 3"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -196,10 +191,8 @@
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../.." style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../modules_p3/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
-      
-        <span style="margin-left: 15px"><a href="../modules_p0/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
