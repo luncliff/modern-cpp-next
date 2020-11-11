@@ -16,7 +16,7 @@
 
 [Visual Studio 2019 16.8](https://docs.microsoft.com/en-us/visualstudio/releases/2019/release-notes) or [later](https://docs.microsoft.com/en-us/visualstudio/releases/2019/release-notes-preview).
 
-설치가 완료되었다면, "Developer Powershell for VS 2019"를 열어서 실행에 문제가 없는지 확인해야 합니다.
+설치가 완료되었다면, "Developer Powershell for VS 2019"를 열어서 실행에 문제가 없는지 확인해야 합니다. 굳이 이 방법이 아니더라도 [MSBuild를 직접 호출](https://docs.microsoft.com/ko-kr/cpp/build/msbuild-visual-cpp)할 수 있는 방법이면 모두 괜찮습니다.
 
 ```ps1
 MSBuild.exe /version # 2020/11/11
@@ -103,4 +103,15 @@ sample_2 에서 IFC 파일이 생성되었는데, 이걸 vcxproj 간에 참조(A
 ```ps1
 MSBuild sample_4.vcxproj /p:verbosity=verbose 
 ```
+
+#### sample_5
+
+sample_2 에서는 정적 라이브러리(lib)를 만들었는데, [같은 코드로 동적 연결 라이브러리(dll)](https://docs.microsoft.com/ko-kr/cpp/build/dlls-in-visual-cpp)를 만들어봅시다.
+
+```ps1
+MSBuild sample_5.vcxproj /p:verbosity=verbose 
+```
+
+**빌드를하면 `sample_5.lib`파일이 생성되지 않습니다**. 이것은 무슨 의미일까요?
+
 
