@@ -67,7 +67,7 @@
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../modules_p3/">Part 3</a>
                     </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../modules_p4/">Part 4</a>
+                    <li class="toctree-l1"><a class="" href="../modules_p4.md">Part 4</a>
                     </li>
                 </ul>
       </div>
@@ -108,7 +108,7 @@
 <h3 id="_1">설치방법</h3>
 <p>You can remove the <code>clang</code> if you don't want to install it.
 Normally just <code>libcxx</code> and <code>libcxxabi</code> will be fine.</p>
-<pre><code class="bash">#!/bin/bash
+<pre><code class="language-bash">#!/bin/bash
 branch=${1:-&quot;master&quot;}
 install_prefix=$(realpath ${2:-&quot;/usr&quot;})
 provider=&quot;https://github.com/llvm-mirror&quot;
@@ -136,7 +136,6 @@ pushd /tmp
     popd # leave /tmp/llvm-build
 popd # leave /tmp
 </code></pre>
-
 <h2 id="ubuntu">Ubuntu 환경에서의 컴파일러 설치</h2>
 <blockquote>
 <p>TBA</p>

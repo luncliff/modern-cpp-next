@@ -79,7 +79,7 @@
     </li>
     </ul>
                     </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../modules_p4/">Part 4</a>
+                    <li class="toctree-l1"><a class="" href="../modules_p4.md">Part 4</a>
                     </li>
                 </ul>
       </div>
@@ -129,7 +129,7 @@
 MIU의 작성방법은 굉장히 간단한데, 그저 <code>export module m1;</code>를 선언하면, 그 이후의 내용은 전부 <code>m1</code>에 귀속됩니다. 이렇게 <strong>암묵적으로</strong> 선언이 귀속되는 범위를 모듈의 <em>Purview</em> 라고 합니다.</p>
 <p>예를 들어, 아래 코드의 경우, <code>endpoint_t</code>와 <code>lookup</code>은 <code>m1</code>의 범위(Purview)에 있는 것이죠. 
 따라서 이 선언들을 사용하려면 <code>m1</code>을 <code>import</code> 해야만 합니다.</p>
-<pre><code class="c++">/// @file examples/modules_p1_2.cpp
+<pre><code class="language-c++">/// @file examples/modules_p1_2.cpp
 /// @see https://en.cppreference.com/w/cpp/preprocessor/replace
 #if not defined(__cpp_modules)
 #warning &quot;'__cpp_modules' not defined&quot;
@@ -145,25 +145,22 @@ export uint16_t lookup(endpoint_t* base, uint16_t capacity, //
                        const char* hostname,                //
                        const char* servname) noexcept;
 </code></pre>
-
 <p>모듈의 다른 소스코드를 컴파일하고, 최종적으로 라이브러리 혹은 실행파일을 만들기 위해선 위와 같은 MIU를 먼저 컴파일(precompile) 해야 합니다.</p>
 <p>Clang의 경우, 아래와 같이 수행할 수 있습니다.</p>
-<pre><code class="console">user@host:~/examples $ clang -x c++-module -std=c++2a -fmodules-ts --precompile -o m1.ifc ./modules_p1_2.cpp 
+<pre><code class="language-console">user@host:~/examples $ clang -x c++-module -std=c++2a -fmodules-ts --precompile -o m1.ifc ./modules_p1_2.cpp 
 ./modules_p1_2.cpp:4:2: warning: &quot;'__cpp_modules' not
       defined&quot; [-W#warnings]
 #warning &quot;'__cpp_modules' not defined&quot;
  ^
 1 warning generated.
 </code></pre>
-
 <p>Makefile로 작성한다면 이런 형태가 되겠지요.</p>
-<pre><code class="makefile">CXXFLAGS    = -std=c++2a -fmodules-ts
+<pre><code class="language-makefile">CXXFLAGS    = -std=c++2a -fmodules-ts
 
 m1.ifc: modules_p1_2.cpp
     clang $(CXXFLAGS) -x c++-module \
          --precompile -o m1.ifc $?
 </code></pre>
-
 <p><code>.ifc</code> 이라는 확장자는 예약된 것은 아닙니다. 당장은 미리 컴파일된 파일을 위한 임의의 확장자가 있다고 생각하시면 되겠습니다.
 아마 이 파일의 규격화(즉, 컴파일러 종속적이지 않은 ifc 파일)는 C++ 20 이후 다소 시간이 지난 후에야 이루어질 수 있을 것입니다.</p>
 <blockquote>
@@ -180,7 +177,7 @@ m1.ifc: modules_p1_2.cpp
 <p><code>export</code> 선언은 MIU에서만 가능하기 때문에, <code>module m1</code>의 구현파일들에서는 따로 <code>export</code> 키워드를 사용할 일은 없습니다.
 단지 <code>m1</code>의 범위안에서 구현을 제공하기만 하면 됩니다.
 범위를 바꾸는 것은 아래 코드처럼 <code>module m1;</code>를 선언하는 것으로 충분합니다.</p>
-<pre><code class="c++">/// @file examples/module_p1_3.cpp
+<pre><code class="language-c++">/// @file examples/module_p1_3.cpp
 #include &lt;cstdint&gt;
 module m1; // `endpoint_t` becomes visible
            // since it's purview of `m1`
@@ -191,7 +188,6 @@ uint16_t lookup(endpoint_t* base, uint16_t capacity, //
     return 0;
 }
 </code></pre>
-
 <p>이 TU에는 <code>endpoint_t</code>에 대한 선언이 없지만, <code>m1</code>의 범위에 있기 때문에 컴파일이 가능합니다. 이를 Reachable 하다고 표현합니다.<br />
 이는 선언(Declaration)에 대한 것이므로, Linking 과정에서 Symbol에 대한 접근을 제어하는 <code>-fvisibility</code>옵션과는 다르다는 점을 숙지할 필요가 있습니다.</p>
 <p>모듈 구현 유닛을 위한 컴파일 명령은 일반적인 C++ 소스코드와 유사합니다.
@@ -200,7 +196,7 @@ uint16_t lookup(endpoint_t* base, uint16_t capacity, //
 <li><code>-fprebuilt-module-path</code>: .ifc 파일을 찾기 위한 폴더 지정 (선택적)</li>
 <li><code>-fmodule-file</code>: 현재 구현중인 모듈의 .ifc 파일 이름 (필수)</li>
 </ul>
-<pre><code class="makefile">CXXFLAGS    = -std=c++2a -fmodules-ts
+<pre><code class="language-makefile">CXXFLAGS    = -std=c++2a -fmodules-ts
 # ...
 m1_impl_1.o: modules_p1_3.cpp
     clang $(CXXFLAGS) \
@@ -208,10 +204,9 @@ m1_impl_1.o: modules_p1_3.cpp
         -fprebuilt-module-path=. \
         -fmodule-file=m1.ifc -o m1_impl_1.o -c $?
 </code></pre>
-
 <p>명령을 보면 <code>-fprebuilt-module-path</code>는 헤더를 찾을 수 있도록 <code>-I</code>옵션을 제공했던 것과 유사합니다.
 컴파일 방법을 알았으니, <code>mi_impl_1.o</code>파일에서 symbol을 확인해볼 수 있겠군요.</p>
-<pre><code class="console">~/examples $ make m1_impl_1.o
+<pre><code class="language-console">~/examples $ make m1_impl_1.o
 clang -std=c++2a -fmodules-ts \
         -fprebuilt-module-path=/usr/local/include \
         -fprebuilt-module-path=. \
@@ -219,7 +214,6 @@ clang -std=c++2a -fmodules-ts \
 ~/examples $ luncliff$ nm --demangle ./m1_impl_1.o 
 0000000000000000 T lookup(endpoint_t*, unsigned short, char const*, char const*)
 </code></pre>
-
 <blockquote>
 <ul>
 <li>Q. <code>-fmodule-file</code>을 생략하고 컴파일 해보세요! (컴파일 옵션)</li>
@@ -231,7 +225,7 @@ clang -std=c++2a -fmodules-ts \
 <h2 id="module-import">Module Import</h2>
 <p>앞선 예제로 확인하셨겠지만, 모듈을 사용하기 시작한다고 해서 헤더파일(즉, 전처리기에 의한 <code>#include</code>)를 사용할 수 없게 되는 것은 아닙니다.
 다만 컴파일된 모듈 인터페이스가 있다면, <code>import</code> 하는 것이 가능하다는 것이죠.</p>
-<pre><code class="c++">/// @file examples/modules_p1_5.cpp
+<pre><code class="language-c++">/// @file examples/modules_p1_5.cpp
 #include &lt;array&gt;
 #include &lt;iostream&gt;
 import m1;
@@ -249,26 +243,23 @@ int main(int, char*[]) {
     return count &gt; 0 ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 </code></pre>
-
 <p><a href="https://youtu.be/tjSuKOz5HK4?t=2286">헤더파일들이 지원하기만 한다면, 헤더파일을 <code>import</code>하는 것이 가능합니다</a>.
 <code>#include</code>가 코드의 복제인데 반해, <code>import</code>는 헤더파일 안에 있는 코드를 한번 처리하여, 그 중간결과물을 다른 TU의 import에서 재사용합니다. 
 결과적으로 처리 시간이 좀 더 줄어들게 되겠죠. (안타깝게도 아직은 지원되지 않습니다.)</p>
-<pre><code class="c++">import &lt;array&gt;;
+<pre><code class="language-c++">import &lt;array&gt;;
 import &lt;iostream&gt;;
 import m1;
 // ...
 </code></pre>
-
 <p>앞서 만들어놓은 <code>m1</code>의 구현 object와 함께 빌드하는 것은 아래처럼 할 수 있습니다. (편의상 <code>-fprebuilt-module-path</code>를 생략하였습니다.)</p>
-<pre><code class="makefile">LDFLAGS     = -lc++
+<pre><code class="language-makefile">LDFLAGS     = -lc++
 CXXFLAGS    = -std=c++2a -fmodules-ts
 # ...
 m1_usage: m1_impl_1.o modules_p1_5.cpp
     clang $(CXXFLAGS) $(LDFLAGS) \
         -fmodule-file=m1.ifc $?
 </code></pre>
-
-<pre><code class="console">user@host:~/examples $ make m1_usage
+<pre><code class="language-console">user@host:~/examples $ make m1_usage
 clang -std=c++2a -fmodules-ts -lc++ \
         -fmodule-file=m1.ifc m1_impl_1.o modules_p1_5.cpp
 user@host:~/examples $ nm --demangle ./a.out 
@@ -279,7 +270,6 @@ user@host:~/examples $ nm --demangle ./a.out
 0000000100000c20 T _main
 ...
 </code></pre>
-
 <blockquote>
 <p>TBA</p>
 </blockquote>
@@ -289,8 +279,6 @@ user@host:~/examples $ nm --demangle ./a.out
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="../modules_p4/" class="btn btn-neutral float-right" title="Part 4">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href="../modules_p2/" class="btn btn-neutral" title="Part 2"><span class="icon icon-circle-arrow-left"></span> Previous</a>
@@ -323,8 +311,6 @@ user@host:~/examples $ nm --demangle ./a.out
       
         <span><a href="../modules_p2/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
-      
-        <span style="margin-left: 15px"><a href="../modules_p4/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
