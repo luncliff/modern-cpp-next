@@ -16,7 +16,7 @@
     <ClCompile Include="print.ixx">
       <Filter>inc</Filter>
     </ClCompile>
-    <ClCompile Include="print_2.cpp">
+    <ClCompile Include="sample_1.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

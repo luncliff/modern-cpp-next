@@ -166,8 +166,8 @@
     <ClCompile Include="sample_1.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="sample_1.vcxproj">
-      <Project>{2291bbde-b999-47e2-8018-65946f4d77e3}</Project>
+    <ProjectReference Include="sample_2.vcxproj">
+      <Project>{378d280a-5a31-4432-ab0b-ffccac2a7e25}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

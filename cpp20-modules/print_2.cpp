@@ -5,6 +5,7 @@
  */
 module;
 #include <cstdio>
+
 module print;
 
 void fwprint(FILE *fout, int argc, char *argv[]) noexcept {
